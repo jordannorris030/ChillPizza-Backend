@@ -55,10 +55,10 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 def connect_to_sheets():
-    """Authenticate and connect to Google Sheets using credentials stored in an environment variable."""
+    """Authenticate and connect to Google Sheets using environment variable credentials."""
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-    # Get Google credentials from Render environment variables
+    # Get credentials from Render environment variable
     credentials_json = os.getenv("GOOGLE_CREDENTIALS")
 
     if not credentials_json:
@@ -70,8 +70,7 @@ def connect_to_sheets():
 
     # Authenticate with Google Sheets
     client = gspread.authorize(creds)
-    return client.open(os.getenv("SHEET_NAME", "PizzaGamingData"))  # Default to PizzaGamingData if not set
-
+    return client.open(os.getenv("SHEET_NAME", "PizzaGamingData"))
 
 # Connect to the sheet when the script runs
 google_sheet = connect_to_sheets()
