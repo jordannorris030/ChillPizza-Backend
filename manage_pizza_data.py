@@ -46,7 +46,7 @@ ADMIN_USER_ID = "6823068142"
 logging.basicConfig(level=logging.INFO)
 
 # === Google Sheets Connection ===
-CREDENTIALS_FILE = "credentials.json"
+# CREDENTIALS_FILE = "credentials.json"
 SHEET_NAME = "PizzaGamingData"
 
 import os
