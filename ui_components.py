@@ -6,35 +6,36 @@ from telegram.ext import CallbackContext
 # === Connect to Google Sheets ===
 SHEET_NAME = "PizzaGamingData"
 
-import os
-import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import json
+import os
+
+def get_google_credentials():
+    """Retrieve Google credentials from Render environment variables."""
+    credentials_json = os.getenv("GOOGLE_CREDENTIALS")
+    
+    if not credentials_json:
+        raise ValueError("❌ GOOGLE_CREDENTIALS environment variable is missing! Check Render settings.")
+
+    try:
+        creds_dict = json.loads(credentials_json)
+        return creds_dict
+    except json.JSONDecodeError as e:
+        raise ValueError(f"❌ JSON decoding error! Ensure correct formatting: {e}")
 
 def connect_to_sheets():
-    """Authenticate and connect to Google Sheets using environment variable credentials."""
+    """Authenticate using Google Sheets API via Render environment variable."""
+    creds_dict = get_google_credentials()
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-    # Get credentials from Render environment variable
-    credentials_json = os.getenv("GOOGLE_CREDENTIALS")
-
-    if not credentials_json:
-        raise Exception("GOOGLE_CREDENTIALS environment variable is missing!")
-
-    # Convert string back to dictionary format
-    creds_dict = json.loads(credentials_json)
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
-    # Authenticate with Google Sheets
     client = gspread.authorize(creds)
-    return client.open(os.getenv("SHEET_NAME", "PizzaGamingData"))
-
-# Connect to Google Sheets when the script runs
-google_sheet = connect_to_sheets()
-
+    return client.open("PizzaGamingData")
 
 # Connect to Google Sheets
 google_sheet = connect_to_sheets()
+print("✅ UI Components Successfully Connected to Google Sheets!")
 
 def get_column_index(sheet, column_name):
     """Retrieve the index of a column by its name."""
