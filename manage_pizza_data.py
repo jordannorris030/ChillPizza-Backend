@@ -45,13 +45,15 @@ ADMIN_USER_ID = "6823068142"
 # Logging Configuration
 logging.basicConfig(level=logging.INFO)
 
-# === Google Sheets Connection ===
-SHEET_NAME = "PizzaGamingData"
-
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import CallbackContext
 import json
 import os
+
+# === Connect to Google Sheets ===
+SHEET_NAME = "PizzaGamingData"
 
 def get_google_credentials():
     """Retrieve Google credentials from Render environment variables."""
@@ -73,11 +75,11 @@ def connect_to_sheets():
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
     client = gspread.authorize(creds)
-    return client.open("PizzaGamingData")
+    return client.open(SHEET_NAME)
 
 # Connect to Google Sheets
 google_sheet = connect_to_sheets()
-print("✅ Successfully connected to Google Sheets!")
+print("✅ UI Components Successfully Connected to Google Sheets!")
 
 def get_column_index(sheet, column_name):
     """Retrieve the index of a column by its name."""
