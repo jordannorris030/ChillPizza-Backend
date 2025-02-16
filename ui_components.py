@@ -2,14 +2,11 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
+import json
+import os
 
 # === Connect to Google Sheets ===
 SHEET_NAME = "PizzaGamingData"
-
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import json
-import os
 
 def get_google_credentials():
     """Retrieve Google credentials from Render environment variables."""
@@ -31,7 +28,7 @@ def connect_to_sheets():
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
     client = gspread.authorize(creds)
-    return client.open("PizzaGamingData")
+    return client.open(SHEET_NAME)
 
 # Connect to Google Sheets
 google_sheet = connect_to_sheets()
@@ -44,6 +41,7 @@ def get_column_index(sheet, column_name):
         return headers.index(column_name) + 1  # Convert to 1-based index
     else:
         raise ValueError(f"Column '{column_name}' not found in sheet '{sheet.title}'.")
+
 
 # 🍕 Main Menu UI
 def main_menu():
