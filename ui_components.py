@@ -6,12 +6,32 @@ from telegram.ext import CallbackContext
 # === Connect to Google Sheets ===
 SHEET_NAME = "PizzaGamingData"
 
+import os
+import json
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
 def connect_to_sheets():
-    """Authenticate and connect to Google Sheets."""
+    """Authenticate and connect to Google Sheets using environment variable credentials."""
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIALS_FILE, scope)
+
+    # Get credentials from Render environment variable
+    credentials_json = os.getenv("GOOGLE_CREDENTIALS")
+
+    if not credentials_json:
+        raise Exception("GOOGLE_CREDENTIALS environment variable is missing!")
+
+    # Convert string back to dictionary format
+    creds_dict = json.loads(credentials_json)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
+    # Authenticate with Google Sheets
     client = gspread.authorize(creds)
-    return client.open(SHEET_NAME)
+    return client.open(os.getenv("SHEET_NAME", "PizzaGamingData"))
+
+# Connect to Google Sheets when the script runs
+google_sheet = connect_to_sheets()
+
 
 # Connect to Google Sheets
 google_sheet = connect_to_sheets()
