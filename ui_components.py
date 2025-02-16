@@ -4,7 +4,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext
 
 # === Connect to Google Sheets ===
-CREDENTIALS_FILE = "credentials.json"
 SHEET_NAME = "PizzaGamingData"
 
 def connect_to_sheets():
