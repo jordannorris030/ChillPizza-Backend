@@ -1,0 +1,5 @@
+touch requirements.txtpython-telegram-bot==20.0
+gspread
+oauth2client
+apscheduler
+requests
